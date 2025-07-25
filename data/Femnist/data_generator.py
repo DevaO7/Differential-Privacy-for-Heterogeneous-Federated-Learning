@@ -1,4 +1,5 @@
-import emnist
+# import emnist
+from torchvision.datasets import EMNIST
 import numpy as np
 from sklearn.decomposition import PCA
 from tqdm import trange
@@ -37,11 +38,20 @@ def generate_data(similarity, num_users=100, num_samples=20, ratio_training=0.8,
     assert (num_users > 0 and num_samples > 0 and similarity >= 0)
 
     # Creation of dataset
-    dataset = 'balanced'
-    train_images, train_labels = emnist.extract_training_samples(dataset)
-    train_images = np.reshape(train_images, (train_images.shape[0], -1))
-    train_images = train_images.astype(np.float32)
-    train_labels = train_labels.astype(np.int64)
+    emnist_root = os.path.join(root_path, 'data', 'emnist')
+
+# download / load the balanced split
+    train_ds = EMNIST(
+        root=emnist_root,
+        split='balanced',
+        train=True,
+        download=True
+    )
+
+    # pull out raw tensors and convert to numpy
+    train_images = train_ds.data.numpy()           # shape [N, 28, 28]
+    train_images = train_images.reshape(train_images.shape[0], -1).astype(np.float32)
+    train_labels = train_ds.targets.numpy().astype(np.int64)
 
     num_of_labels = len(set(train_labels))
     # = 47 (since there are 47 balanced classes for EMNIST)
@@ -122,6 +132,7 @@ def generate_data(similarity, num_users=100, num_samples=20, ratio_training=0.8,
         json.dump(train_data, outfile)
     with open(test_path, 'w') as outfile:
         json.dump(test_data, outfile)
+    
 
 
 def generate_pca_data(similarity, dim_pca=60, num_users=100, num_samples=20, ratio_training=0.8, number=0,
@@ -156,11 +167,20 @@ def generate_pca_data(similarity, dim_pca=60, num_users=100, num_samples=20, rat
     assert (num_users > 0 and num_samples > 0 and similarity >= 0 and dim_pca > 0)
 
     # Creation of dataset
-    dataset = 'balanced'
-    train_images, train_labels = emnist.extract_training_samples(dataset)
-    train_images = np.reshape(train_images, (train_images.shape[0], -1))
-    train_images = train_images.astype(np.float32)
-    train_labels = train_labels.astype(np.int64)
+    emnist_root = os.path.join(root_path, 'data', 'emnist')
+
+    # download / load the balanced split
+    train_ds = EMNIST(
+        root=emnist_root,
+        split='balanced',
+        train=True,
+        download=True
+    )
+
+    # pull out raw tensors and convert to numpy
+    train_images = train_ds.data.numpy()           # shape [N, 28, 28]
+    train_images = train_images.reshape(train_images.shape[0], -1).astype(np.float32)
+    train_labels = train_ds.targets.numpy().astype(np.int64)
     
     print("New dimension from PCA: ", dim_pca)
     # PCA from training set

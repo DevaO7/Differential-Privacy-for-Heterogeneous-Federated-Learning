@@ -130,7 +130,7 @@ def run_simulation(time, dataset, algo, model, similarity, alpha, beta, number, 
     if dp == "None":
         local_learning_rate_list = []  # TO FILL for tuning (without dp)
     elif dp == "Gaussian":
-        local_learning_rate_list = []  # TO FILL for tuning (with dp)
+        local_learning_rate_list = [0.01, 0.02]  # TO FILL for tuning (with dp)
     # for logistic data
     alphas = [0.0, 1.0, 5.0]  # heterogeneity : between models
     betas = [0.0, 1.0, 5.0]  # heterogeneity : between data records

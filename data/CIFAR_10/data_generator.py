@@ -1,4 +1,3 @@
-import emnist
 import numpy as np
 from sklearn.decomposition import PCA
 from tqdm import trange

@@ -30,7 +30,7 @@ class Server:
         self.model = copy.deepcopy(model)
         if use_cuda:
             self.model = self.model.cuda()
-        self.model_lowest = torch.load(os.path.join(model_path, "server_lowest_" + str(similarity) + ".pt"))
+        self.model_lowest = torch.load(os.path.join(model_path, "server_lowest_" + str(similarity) + ".pt"), weights_only=False)
         if use_cuda:
             self.model_lowest = self.model_lowest.cuda()
 
